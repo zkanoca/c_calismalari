@@ -21,7 +21,7 @@ int main(void)
     // turn off all LEDs
     for (i = 0; i < 4; i++)
     {
-        green_led_onoff(1, LED_OFF);
+        green_led_onoff(i, LED_OFF);
     }
 
     // ask for initial value of counter
