@@ -45,8 +45,6 @@ int main(void)
         }
     }
 
-    // init buttons
-    buttons_init();
 
     while (1)
     {
