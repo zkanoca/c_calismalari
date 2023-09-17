@@ -5,7 +5,7 @@ int main()
 {
     system("cls");
     char cmd;
-    float curr_re = 0.0, curr_im = 0.0, new_re, new_im, temp_re, temp_im;
+    float curr_re = 0.0, curr_im = 0.0, new_re=0.0, new_im=0.0, temp_re=0.0, temp_im=0.0;
     int i, no;
     // Task 1
     printf("** Complex Calculator **\n");
