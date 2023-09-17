@@ -1,10 +1,8 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
-/*
-//karmaşık sayı kütüphanesi kullanacaksan burayı yorum satırı yapma.
- #include <complex.h>
-*/
+#include <complex.h>
+
 int main()
 {
     system("cls");
@@ -12,7 +10,8 @@ int main()
     float curr_re = 0.0, curr_im = 0.0;
     float new_re = 0.0, new_im = 0.0;
     float temp_re = 0.0, temp_im = 0.0;
-    float temp_temp_re = 0.0, temp_temp_im = 0.0;
+    float complex z1 = 0.0 + 0.0 * I;
+    float complex raised = 0.0 + 0.0 * I;
 
     int i, j, no, x, y;
     char plane[21][21] = {
@@ -38,12 +37,6 @@ int main()
         {"..........|.........."},
         {"..........|.........."}};
 
-    /* //complex.h kullanarak yapacaksan bu satırları kullan.
-      float complex z1 = 0.0 + 0.0 * I;
-      float complex raised = 1.0;
-    */
-
-    // Task 1
     printf("** Complex Calculator **\n");
 
     do
@@ -68,33 +61,12 @@ int main()
                         curr_re = 1;
                     }
                 }
-                else
+                else // no > 0
                 {
-                    /*
-                        //istersen complex.h kütüphanesiyle
-                        //daha sancısız yapabilirsin.
-
-                    z1 = curr_re + curr_im*I;
+                    z1 = curr_re + curr_im * I;
                     raised = cpow(z1, no);
                     curr_re = creal(raised);
                     curr_im = cimag(raised);
-                    */
-                    /*
-                    YA DA
-                    bildigimiz yoldan
-                    */
-                    temp_re = curr_re;
-                    temp_im = curr_im;
-
-                    for (i = 1; i < no; i++)
-                    {
-                        temp_temp_re = temp_re;
-                        temp_temp_im = temp_im;
-                        temp_re = temp_re * curr_re - temp_im * curr_im;
-                        temp_im = temp_temp_re * curr_im + curr_re * temp_im;
-                    }
-                    curr_re = temp_re;
-                    curr_im = temp_im;
                 }
             }
             else if (cmd == 'p')
