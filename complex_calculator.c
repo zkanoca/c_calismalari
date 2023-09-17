@@ -4,7 +4,6 @@
 
 int main()
 {
-    system("cls");
     char cmd, temp_dot;
     float curr_re = 0.0, curr_im = 0.0;
     float new_re = 0.0, new_im = 0.0;
