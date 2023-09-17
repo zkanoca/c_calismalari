@@ -4,7 +4,7 @@
 int main()
 {
     system("cls");
-    char cmd, sign;
+    char cmd;
     float curr_re = 0.0, curr_im = 0.0, new_re, new_im, temp_re, temp_im;
     int i, no;
     // Task 1
@@ -12,7 +12,6 @@ int main()
 
     do
     {
-        sign = '+'; //+ as default
         printf("Operation [0+-*crpq]? ");
         scanf(" %c", &cmd);
 
