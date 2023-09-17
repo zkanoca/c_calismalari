@@ -16,7 +16,7 @@ int main()
         printf("Operation [0+-*crpq]? ");
         scanf(" %c", &cmd);
 
-        if (cmd == '+' || cmd == '-' || cmd == '*' || cmd == 'r')
+        if (cmd == '+' || cmd == '-' || cmd == '*' || cmd == 'r' || cmd == 'p')
         {
             if (cmd == 'r')
             {
@@ -89,10 +89,13 @@ int main()
         }
 
         if (curr_im < 0)
-            sign = '\0';
-
-        printf("Current value is %f%c%fi\n", curr_re, sign, curr_im);
-
+        {
+            printf("Current value is %f-%fi\n", curr_re, curr_im);
+        }
+        else
+        {
+            printf("Current value is %f+%fi\n", curr_re, curr_im);
+        }
     } while (cmd != 'q');
 
     printf("Bye!");
