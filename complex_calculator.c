@@ -1,12 +1,34 @@
 #include <stdio.h>
-
+#include <math.h>
 
 int main()
 {
     system("cls");
-    char cmd;
-    float curr_re = 0.0, curr_im = 0.0, new_re=0.0, new_im=0.0, temp_re=0.0, temp_im=0.0;
-    int i, no;
+    char cmd, temp_dot;
+    float curr_re = 0.0, curr_im = 0.0, new_re, new_im, temp_re, temp_im;
+    int i, j, no, x, y;
+    char plane[21][21] = {
+        {"..........|.........."},
+        {"..........|.........."},
+        {"..........|.........."},
+        {"..........|.........."},
+        {"..........|.........."},
+        {"..........|.........."},
+        {"..........|.........."},
+        {"..........|.........."},
+        {"..........|.........."},
+        {"..........|.........."},
+        {"----------+----------"},
+        {"..........|.........."},
+        {"..........|.........."},
+        {"..........|.........."},
+        {"..........|.........."},
+        {"..........|.........."},
+        {"..........|.........."},
+        {"..........|.........."},
+        {"..........|.........."},
+        {"..........|.........."},
+        {"..........|.........."}};
     // Task 1
     printf("** Complex Calculator **\n");
 
@@ -45,6 +67,38 @@ int main()
                     curr_re = temp_re;
                     curr_im = temp_im;
                 }
+            }
+            else if (cmd == 'p')
+            {
+                // plot
+                if (curr_re < 0)
+                {
+                    x = 10 - round(abs(curr_re));
+                }
+                else
+                {
+                    x = (int)curr_re + 10;
+                }
+                if (curr_im < 0)
+                {
+                    y = 10 + round(abs(curr_im));
+                }
+                else
+                {
+                    y = 10 - (int)curr_im;
+                }
+                temp_dot = plane[y][x];
+                plane[y][x] = '*';
+                for (i = 0; i < 21; i++)
+                {
+                    for (j = 0; j < 21; j++)
+                    {
+                        printf("%c", plane[i][j]);
+                    }
+                    printf("\n");
+                }
+                plane[y][x] = temp_dot;
+                printf("y: %d x: %d\n", y, x);
             }
             else
             {
@@ -89,7 +143,7 @@ int main()
 
         if (curr_im < 0)
         {
-            printf("Current value is %f-%fi\n", curr_re, curr_im);
+            printf("Current value is %f%fi\n", curr_re, curr_im);
         }
         else
         {
