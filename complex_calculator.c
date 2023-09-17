@@ -1,11 +1,16 @@
 #include <stdio.h>
 #include <math.h>
+#include <stdlib.h>
 
 int main()
 {
     system("cls");
     char cmd, temp_dot;
-    float curr_re = 0.0, curr_im = 0.0, new_re = 0.0, new_im = 0.0, temp_re = 0.0, temp_im = 0.0;
+    float curr_re = 0.0, curr_im = 0.0;
+    float new_re = 0.0, new_im = 0.0;
+    float temp_re = 0.0, temp_im = 0.0;
+    float temp_temp_re = 0.0, temp_temp_im = 0.0;
+
     int i, j, no, x, y;
     char plane[21][21] = {
         {"..........|.........."},
@@ -29,7 +34,7 @@ int main()
         {"..........|.........."},
         {"..........|.........."},
         {"..........|.........."}};
-    // Task 1
+
     printf("** Complex Calculator **\n");
 
     do
@@ -41,7 +46,7 @@ int main()
         {
             if (cmd == 'r')
             {
-                printf("Natural operand: ");
+                printf("Natural operand? ");
                 scanf("%d", &no);
 
                 if (no == 0)
@@ -56,13 +61,15 @@ int main()
                 }
                 else
                 {
-                    for (i = 1; i <= no; i++)
+                    temp_re = curr_re;
+                    temp_im = curr_im;
+
+                    for (i = 1; i < no; i++)
                     {
-                        // (a+bi)(a+bi) = a*a + a*bi + a*bi - b*b
-                        temp_re = 1;
-                        temp_im = 1;
-                        temp_re *= curr_re * curr_re - curr_im * curr_im;
-                        temp_im *= curr_re * curr_im + curr_re * curr_im;
+                        temp_temp_re = temp_re;
+                        temp_temp_im = temp_im;
+                        temp_re = temp_re * curr_re - temp_im * curr_im;
+                        temp_im = temp_temp_re * curr_im + curr_re * temp_im;
                     }
                     curr_re = temp_re;
                     curr_im = temp_im;
@@ -98,11 +105,10 @@ int main()
                     printf("\n");
                 }
                 plane[y][x] = temp_dot;
-                printf("y: %d x: %d\n", y, x);
             }
             else
             {
-                printf("Complex operand: ");
+                printf("Complex operand? ");
                 scanf("%f %f", &new_re, &new_im);
             }
         }
@@ -151,6 +157,6 @@ int main()
         }
     } while (cmd != 'q');
 
-    printf("Bye!");
+    printf("Bye!\n");
     return 0;
 }
