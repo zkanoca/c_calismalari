@@ -1,4 +1,4 @@
-// #include <libpynq.h>
+#include <libpynq.h>
 #include <ctype.h>
 #include <string.h>
 #include <stdio.h>
