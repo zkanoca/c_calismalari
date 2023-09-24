@@ -253,7 +253,6 @@ int main(void)
     case 's':
       printf("Please enter a string? ");
       readLine(currString, LENGTH); //scanf("%[^\n]", &currString); //gets(currString);
-      printString(currString);
       break;
     case 'o': // task 10
       printf("Find first occurrence of which character? ");
