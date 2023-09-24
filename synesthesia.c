@@ -228,7 +228,7 @@ int main(void)
       break;
     case 's':
       printf("Please enter a string? ");
-      scanf("%[^\n]", &currString); //gets(currString);
+      scanf("%[^\n]", &currString[0]); //gets(currString);
       printString(currString);
       break;
     case 'o': // task 10
