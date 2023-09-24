@@ -5,25 +5,49 @@
 
 #define LENGTH 30
 
+// void readLine(char str[], int length)
+// {
+//   char ch;
+//   int j = 0, i = 0;
+//   for (i = strlen(str); i < length; i++)
+//   {
+//     str[i] = '\0';
+//   }
+//   while (((ch = getchar()) != '\n') && j < length - 1)
+//   {
+//     str[j] = ch;
+//     j++;
+//   }
+//   while ((ch != '\n') && j >= length - 1)
+//   {
+//     ch = getchar();
+//   }
+//   str[j] = '\0';
+// }
+
 void readLine(char str[], int length)
 {
+  int i;
   char ch;
-  int j = 0, i = 0;
-  for (i = strlen(str); i < length; i++)
+
+  for (i = 0; i < length; i++)
   {
     str[i] = '\0';
   }
-  while (((ch = getchar()) != '\n') && j < length - 1)
+
+  for (i = 0; (ch = getchar()) != '\n' && i < length - 1; i++)
   {
-    str[j] = ch;
-    j++;
+    str[i] = ch;
   }
-  while ((ch != '\n') && j >= length - 1)
+
+  while (ch != '\n' && (ch = getchar()) != '\n')
   {
-    ch = getchar();
+    //do  nothing, just wait for the input to finish. 
   }
-  str[j] = '\0';
+
+  str[i] = '\0';
 }
+
 
 void printArray(char a[], int length)
 {
