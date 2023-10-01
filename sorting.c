@@ -191,7 +191,7 @@ void mrg(struct person_t persons[], int left, int mid, int right)
             persons[k] = leftperson[i];
             i++;
         }
-        else if (leftperson[i].height < rightperson[j].height)
+        else if (leftperson[i].height == rightperson[j].height)
         {
             if (strcmp(leftperson[i].name, rightperson[j].name) > 0)
             {
