@@ -256,6 +256,36 @@ void mrgeSort(struct person_t persons[], int nrPersons, int left, int right /*, 
 
     mrg(persons, left, mid, right);
     printf("after merging     ");
+
+/*****************************/
+    int swap;
+    int i;
+    do{
+        swap = 0;
+        for (i = 1; i < nrPersons; i++){
+            int flag = 0;
+            if (persons[i-1].height > persons[i].height){
+                flag = 1;
+            }
+            else if (persons[i-1].height == persons[i].height){
+                if (strcmp(persons[i-1].name, persons[i].name) > 0){
+                    flag = 1;
+                }
+            }
+            if (flag){
+            struct person_t tempPerson = persons[i-1];
+            persons[i-1] = persons[i];
+            persons[i] = tempPerson;
+            swap = 1;
+            }
+        }
+    }
+    while (swap);
+
+/*****************************/
+
+
+    
     printValues(persons, left, right);
     // displayValues(display, persons, right-left+1, left, right);
 }
