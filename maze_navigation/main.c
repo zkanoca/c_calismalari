@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
-#include <math.h>
+//Uncomment
+//#include <libpynq.h>
 
 #define DISPLAY_WIDTH 240
 #define DISPLAY_HEIGHT 240
@@ -14,6 +15,7 @@
 #define PATH '+'    /* part of the current path */
 #define VISITED '~' /* corridor; part of a past path */
 
+//Bu silinecek
 enum colors
 {
     RGB_RED = 0xf800,
@@ -27,6 +29,8 @@ enum colors
     RGB_PURPLE = 0xF81F
 };
 
+
+//Bu silinecek
 typedef struct
 {
     int _width;
@@ -54,6 +58,7 @@ typedef struct
     coordinate_t size;
 } maze_t;
 
+//calisiyor
 void inputMaze(maze_t *maze)
 {
     int rows, cols, i, j;
@@ -99,6 +104,7 @@ void inputMaze(maze_t *maze)
     }
 }
 
+//calisiyor
 void printMaze(const maze_t *maze)
 {
     int i, j;
@@ -119,6 +125,7 @@ void printMaze(const maze_t *maze)
     }
 }
 
+//test edilecek
 void displayMaze(display_t *display, maze_t *maze)
 {
     if (maze->size.x <= 0 || maze->size.y <= 0)
@@ -170,6 +177,7 @@ void displayMaze(display_t *display, maze_t *maze)
     }
 }
 
+//bunda sorun var
 coordinate_t findStartDestination(maze_t *maze, coordinate_t *destination)
 {
     int x, y;
@@ -202,6 +210,7 @@ coordinate_t findStartDestination(maze_t *maze, coordinate_t *destination)
     return start;
 }
 
+//calisiyor
 void swapStartDestination(maze_t *maze, coordinate_t *start, coordinate_t *destination)
 {
     // Are there really start and destination points?
@@ -263,6 +272,7 @@ void swapStartDestination(maze_t *maze, coordinate_t *start, coordinate_t *desti
     }
 }
 
+//calisiyor
 void mirrorMaze(maze_t *maze)
 {
     int i, j;
@@ -290,6 +300,8 @@ void mirrorMaze(maze_t *maze)
     }
 }
 
+
+//bunda sorun var
 int findPath(display_t *display, maze_t *maze, coordinate_t c, int length)
 {
 
@@ -340,6 +352,7 @@ int findPath(display_t *display, maze_t *maze, coordinate_t c, int length)
     return 0;
 }
 
+//calisiyor
 void resetPath(maze_t *maze)
 {
     int i, j;
@@ -357,6 +370,7 @@ void resetPath(maze_t *maze)
 
 int main()
 {
+    //uncomment edilecek
     // pynq_init();
     // color_leds_init_pwm();
     display_t *display;
@@ -447,6 +461,7 @@ int main()
         }
     } while (cmd != 'q');
 
+    //uncomment edilecek
     // display_destroy();
     return 0;
 }
