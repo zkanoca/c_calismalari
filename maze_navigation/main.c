@@ -307,68 +307,71 @@ void mirrorMaze(maze_t *maze)
 
 int findPath(display_t *display, maze_t *maze, coordinate_t c, int length)
 {
-
+    //  printf("x:%d, y:%d\nlength: %d\n", c.x, c.y, length);
     if (c.x < 0 || c.x >= maze->size.x || c.y < 0 || c.y >= maze->size.y)
     {
         return 0; // if ((x,y) outside maze) return 0
     }
-    if (maze->grid[c.x][c.y] == WALL || maze->grid[c.x][c.y] == PATH || maze->grid[c.x][c.y] == VISITED) // wall or visited
+    if (maze->grid[c.y][c.x] == WALL || maze->grid[c.y][c.x] == PATH || maze->grid[c.y][c.x] == VISITED) // wall or visited
     {
         return 0; // if ((x,y) is blocked or already visited) return 0
     }
-    if (maze->grid[c.x][c.y] == 'D') // destination
+    if (maze->grid[c.y][c.x] == DESTINATION) // destination
     {
-        return length; // if ((x,y) is the destination) return 1
+        return length; // if ((x,y) is the destination) return length
     }
 
     // if we get here we didn’t find a solution in N,E,S, or W directions
     // mark (x,y) as visited (if (x,y) isn’t the start)
-    if (maze->grid[c.x][c.y] != START)
+    if (maze->grid[c.y][c.x] != START)
     {
-        maze->grid[c.x][c.y] = PATH;
+        maze->grid[c.y][c.x] = PATH;
     }
 
     coordinate_t cN, cE, cS, cW;
     int N, E, S, W;
+
     // try to find a path in North, East, South, and West directions
-    cN.x = c.x - 1;
-    cN.y = c.y;
-
-    cE.x = c.x;
-    cE.y = c.y + 1;
-
-    cS.x = c.x + 1;
-    cS.y = c.y;
-
-    cW.x = c.x;
-    cW.y = c.y - 1;
-
+    cN.x = c.x;
+    cN.y = c.y - 1;
     N = findPath(display, maze, cN, length + 1); // North
-    E = findPath(display, maze, cE, length + 1); // East
-    S = findPath(display, maze, cS, length + 1); // South
-    W = findPath(display, maze, cW, length + 1); // West
-
     if (N > 0)
     {
+        // printf("\nThere is a path to N");
         return N;
     }
+
+    cE.x = c.x + 1;
+    cE.y = c.y;
+    E = findPath(display, maze, cE, length + 1); // East
     if (E > 0)
     {
+        // printf("\nThere is a path to E");
         return E;
     }
+
+    cS.x = c.x;
+    cS.y = c.y + 1;
+    S = findPath(display, maze, cS, length + 1); // South
     if (S > 0)
     {
+        // printf("\nThere is a path to S");
         return S;
     }
+
+    cW.x = c.x - 1;
+    cW.y = c.y;
+    W = findPath(display, maze, cW, length + 1); // West
     if (W > 0)
     {
+        // printf("\nThere is a path to W");
         return W;
     }
 
     //  if no path is found from this point then go back
-    if (maze->grid[c.x][c.y] != START)
+    if (maze->grid[c.y][c.x] != START)
     {
-        maze->grid[c.x][c.y] = VISITED;
+        maze->grid[c.y][c.x] = VISITED;
     }
 
     return 0;
