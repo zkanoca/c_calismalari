@@ -466,7 +466,8 @@ do
             start = findStartDestination(&maze, &destination);
 
             length = findPath(display, &maze, start, 0);
-            if (length != -1)
+            
+            if (length > 0)
             {
                 printf("Found a path of length %d\n", length);
             }
