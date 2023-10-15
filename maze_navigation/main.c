@@ -305,7 +305,6 @@ void mirrorMaze(maze_t *maze)
 }
 
 
-//bunda sorun var
 int findPath(display_t *display, maze_t *maze, coordinate_t c, int length)
 {
 
@@ -313,13 +312,13 @@ int findPath(display_t *display, maze_t *maze, coordinate_t c, int length)
     {
         return 0; // if ((x,y) outside maze) return 0
     }
-    if (maze->grid[c.x][c.y] == WALL || maze->grid[c.x][c.y] == VISITED) // wall or visited
+    if (maze->grid[c.x][c.y] == WALL || maze->grid[c.x][c.y] == PATH || maze->grid[c.x][c.y] == VISITED) // wall or visited
     {
-        return 0; // if ((x,y) is blocked) return 0
+        return 0; // if ((x,y) is blocked or already visited) return 0
     }
     if (maze->grid[c.x][c.y] == 'D') // destination
     {
-        return length; // if ((x,y) is the destination) return length
+        return length; // if ((x,y) is the destination) return 1
     }
 
     // if we get here we didn’t find a solution in N,E,S, or W directions
@@ -330,29 +329,48 @@ int findPath(display_t *display, maze_t *maze, coordinate_t c, int length)
     }
 
     coordinate_t cN, cE, cS, cW;
-
+    int N, E, S, W;
     // try to find a path in North, East, South, and West directions
     cN.x = c.x - 1;
     cN.y = c.y;
+
     cE.x = c.x;
     cE.y = c.y + 1;
+
     cS.x = c.x + 1;
     cS.y = c.y;
+
     cW.x = c.x;
     cW.y = c.y - 1;
 
-    int N = findPath(display, maze, cN, length + 1); // North
-    int E = findPath(display, maze, cE, length + 1); // East
-    int S = findPath(display, maze, cS, length + 1); // South
-    int W = findPath(display, maze, cW, length + 1); // West
+    N = findPath(display, maze, cN, length + 1); // North
+    E = findPath(display, maze, cE, length + 1); // East
+    S = findPath(display, maze, cS, length + 1); // South
+    W = findPath(display, maze, cW, length + 1); // West
 
-    if (N || E || S || W)
+    if (N > 0)
     {
-        return 1;
+        return N;
+    }
+    if (E > 0)
+    {
+        return E;
+    }
+    if (S > 0)
+    {
+        return S;
+    }
+    if (W > 0)
+    {
+        return W;
     }
 
-    // Backtrack if no path is found from this cell
-    maze->grid[c.x][c.y] = NOT_VISITED;
+    //  if no path is found from this point then go back
+    if (maze->grid[c.x][c.y] != START)
+    {
+        maze->grid[c.x][c.y] = VISITED;
+    }
+
     return 0;
 }
 
