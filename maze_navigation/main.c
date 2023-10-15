@@ -406,7 +406,7 @@ int longestPath(maze_t *maze, coordinate_t c, int length)
     }
 
     // Is the current cell a WALL or VISITED or PATH
-    if (maze->grid[y][x] == WALL || maze->grid[y][x] == PATH /*|| maze->grid[y][x] == VISITED*/)
+    if (maze->grid[y][x] == WALL || maze->grid[y][x] == PATH /*|| maze->grid[y][x] == START*/)
     {
         return 0;
     }
@@ -419,15 +419,17 @@ int longestPath(maze_t *maze, coordinate_t c, int length)
     }
 
     // Mark the current point as visited
-    maze->grid[y][x] = PATH;
+    if (maze->grid[y][x] != START)
+    {
+        maze->grid[y][x] = PATH;
+    }
 
     // Recursively search in all four directions: N, E, S, W
     int longest = 0;
 
     int N, E, S, W;
     coordinate_t cN, cE, cS, cW;
-    
-    
+
     cN.x = c.x;
     cN.y = c.y - 1;
     N = longestPath(maze, cN, length + 1);
@@ -449,7 +451,10 @@ int longestPath(maze_t *maze, coordinate_t c, int length)
     longest = (W > longest) ? W : longest;
 
     // Unmark the current point to revisit
-    maze->grid[y][x] = NOT_VISITED;
+    if (maze->grid[y][x] != START)
+    {
+        maze->grid[y][x] = NOT_VISITED;
+    }
 
     return longest;
 }
