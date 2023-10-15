@@ -277,17 +277,16 @@ void swapStartDestination(maze_t *maze, coordinate_t *start, coordinate_t *desti
     }
 }
 
-//calisiyor
 void mirrorMaze(maze_t *maze)
 {
-    int i, j;
+    int x,y;
     char mirror[DISPLAY_WIDTH][DISPLAY_HEIGHT];
 
-    for (i = 0; i < maze->size.x; i++)
+    for (y = 0; y < maze->size.y; y++)
     {
-        for (j = 0; j < maze->size.y; j++)
+        for (x = 0; x < maze->size.x; x++)
         {
-            mirror[j][i] = maze->grid[i][j];
+            mirror[y][x] = maze->grid[x][y];
         }
     }
 
@@ -296,11 +295,11 @@ void mirrorMaze(maze_t *maze)
     maze->size.y = maze->size.x;
     maze->size.x = tmpSize;
 
-    for (i = 0; i < maze->size.x; i++)
+    for (y = 0; y < maze->size.y; y++)
     {
-        for (j = 0; j < maze->size.y; j++)
+        for (x = 0; x < maze->size.x; x++)
         {
-            maze->grid[i][j] = mirror[i][j];
+            maze->grid[y][x] = mirror[y][x];
         }
     }
 }
