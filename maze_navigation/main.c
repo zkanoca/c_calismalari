@@ -450,7 +450,7 @@ int longestPath(maze_t *maze, coordinate_t c, int length)
     W = longestPath(maze, cW, length + 1);
     longest = (W > longest) ? W : longest;
 
-    // Unmark the current point to revisit
+    // Unmark the current point to revisit if not START
     if (maze->grid[y][x] != START)
     {
         maze->grid[y][x] = NOT_VISITED;
