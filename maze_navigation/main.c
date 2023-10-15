@@ -380,18 +380,20 @@ int findPath(display_t *display, maze_t *maze, coordinate_t c, int length)
 //calisiyor
 void resetPath(maze_t *maze)
 {
-    int i, j;
-    for (i = 0; i < maze->size.x; i++)
+    int x,y;
+    
+    for (y = 0; y < maze->size.y; y++)
     {
-        for (j = 0; j < maze->size.y; j++)
+        for (x = 0; x < maze->size.x; x++)
         {
-            if (maze->grid[i][j] == '+' || maze->grid[i][j] == '~')
+            if (maze->grid[y][x] == PATH || maze->grid[y][x] == VISITED)
             {
-                maze->grid[i][j] = '.';
+                maze->grid[y][x] = NOT_VISITED;
             }
         }
     }
 }
+
 
 int main()
 {
