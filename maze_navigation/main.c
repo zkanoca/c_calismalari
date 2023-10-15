@@ -177,29 +177,32 @@ void displayMaze(display_t *display, maze_t *maze)
     }
 }
 
-//bunda sorun var
 coordinate_t findStartDestination(maze_t *maze, coordinate_t *destination)
 {
-    int x, y;
+    int x, y, z = 0;
     coordinate_t start = {-1, -1};
-    *destination = start;
 
-    for (x = 0; x < maze->size.x; x++)
+    destination->x = -1;
+    destination->y = -1;
+
+    for (y = 0; y < maze->size.y; y++)
     {
-        for (y = 0; y < maze->size.y; y++)
+        for (x = 0; x < maze->size.x; x++)
         {
-            if (maze->grid[x][y] == START)
+            if (maze->grid[y][x] == START)
             {
-                if (start.y == -1)
+                if (start.y == -1 || start.x == -1)
                 {
                     start.x = x;
                     start.y = y;
                 }
             }
-            if (maze->grid[x][y] == DESTINATION)
+
+            if (maze->grid[y][x] == DESTINATION)
             {
-                if (destination->y == -1)
+                if (destination->y == -1 || destination->x == -1)
                 {
+                    // break;
                     destination->x = x;
                     destination->y = y;
                 }
@@ -209,6 +212,8 @@ coordinate_t findStartDestination(maze_t *maze, coordinate_t *destination)
 
     return start;
 }
+
+
 
 //calisiyor
 void swapStartDestination(maze_t *maze, coordinate_t *start, coordinate_t *destination)
@@ -220,16 +225,16 @@ void swapStartDestination(maze_t *maze, coordinate_t *start, coordinate_t *desti
     }
 
     int foundStart = 0, foundDestination = 0;
-    int i, j;
+    int x, y;
 
     // Find START and replace a temporary character '!'
-    for (i = 0; i < maze->size.x; i++)
+    for (y = 0; y < maze->size.y; y++)
     {
-        for (j = 0; j < maze->size.y; j++)
+        for (x = 0; x < maze->size.x; x++)
         {
-            if (maze->grid[i][j] == START)
+            if (maze->grid[y][x] == START)
             {
-                maze->grid[i][j] = '!';
+                maze->grid[y][x] = '!';
                 foundStart = 1;
                 break;
             }
@@ -239,15 +244,15 @@ void swapStartDestination(maze_t *maze, coordinate_t *start, coordinate_t *desti
     }
 
     // Find DESTINATION and replace with START
-    for (i = 0; i < maze->size.x; i++)
+    for (y = 0; y < maze->size.y; y++)
     {
-        for (j = 0; j < maze->size.y; j++)
+        for (x = 0; x < maze->size.x; x++)
         {
-            if (maze->grid[i][j] == DESTINATION)
+            if (maze->grid[y][x] == DESTINATION)
             {
-                maze->grid[i][j] = START;
-                destination->x = i;
-                destination->y = j;
+                maze->grid[y][x] = START;
+                destination->y = y;
+                destination->x = y;
                 foundDestination = 1;
                 break;
             }
@@ -257,15 +262,15 @@ void swapStartDestination(maze_t *maze, coordinate_t *start, coordinate_t *desti
     }
 
     // Find '!' and replace it with DESTINATION
-    for (i = 0; i < maze->size.x; i++)
+    for (y = 0; y < maze->size.y; y++)
     {
-        for (j = 0; j < maze->size.y; j++)
+        for (x = 0; x < maze->size.x; x++)
         {
-            if (maze->grid[i][j] == '!')
+            if (maze->grid[y][x] == '!')
             {
-                maze->grid[i][j] = DESTINATION;
-                start->x = i;
-                start->y = j;
+                maze->grid[y][x] = DESTINATION;
+                start->x = x;
+                start->y = y;
                 break;
             }
         }
@@ -392,9 +397,8 @@ int main()
     coordinate_t destination;
     int length;
 
-    do
+do
     {
-
         printf("Command? ");
         scanf(" %c", &cmd);
         switch (cmd)
@@ -419,7 +423,7 @@ int main()
             }
             else
             {
-                printf("The start is at (%3d,%3d)\n", start.x, start.y);
+                printf("The start is at     (%3d,%3d)\n", start.x, start.y);
             }
             if (destination.x == -1)
             {
@@ -438,7 +442,9 @@ int main()
             mirrorMaze(&maze);
             break;
         case 'f':
-            start = findStartDestination(&maze, 'S');
+
+            start = findStartDestination(&maze, &destination);
+
             length = findPath(display, &maze, start, 0);
             if (length != -1)
             {
