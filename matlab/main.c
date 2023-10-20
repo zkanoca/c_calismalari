@@ -5,15 +5,15 @@ a print matrix A  -->OK
 b print matrix B  -->OK
 c print matrix C  -->OK
 A initialise matrix A  --> OK
-B copy matrix A to matrix B --> OK
+B copy matrix A to matrix B
 + add matrix A to matrix B, placing the result in matrix C --> OK
 t transpose matrix A --> OK
 ∗ multiply matrix A and B, placing the result in matrix C --> OK
 m compute a minor of matrix A, placing the result in matrix C --> OK
-d compute the determinant of matrix A 
+d compute the determinant of matrix A --> OK
 */
 #include <stdio.h>
-#include <string.h>
+#include <math.h>
 #include <stdlib.h>
 
 #define MAXROWS 10
@@ -32,6 +32,7 @@ void transposeMatrix(matrix_t *m);
 void copyA2B(matrix_t *ma, matrix_t *mb);
 void multiplyMatrices(matrix_t ma, matrix_t mb, matrix_t *mc);
 matrix_t minorMatrix(matrix_t *m, int row, int column);
+float determinant(matrix_t *m);
 
 int main()
 {
@@ -48,7 +49,7 @@ int main()
     char cmd;
 
     int rows, cols;
-
+    float det;
     do
     {
         printf("Command? ");
@@ -88,10 +89,16 @@ int main()
             multiplyMatrices(ma, mb, &mc);
             break;
         case 'm':
-
             printf("Remove which row & column? ");
             scanf("%d %d", &rows, &cols);
             mc = minorMatrix(&ma, rows, cols);
+            break;
+        case 'd':
+            det = determinant(&ma);
+            if (ma.elements[0] != NULL && ma.rows == ma.columns)
+            {
+                printf("\nThe determinant is %f\n", det);
+            }
             break;
         case 'q':
             freeMatrixElements(&ma);
@@ -362,4 +369,44 @@ matrix_t minorMatrix(matrix_t *m, int row, int column)
     }
 
     return minor;
+}
+
+float determinant(matrix_t *m)
+{
+    int r, c, sign;
+    float det = 0;
+
+    if (m->rows <= 0 || m->columns <= 0)
+    {
+        printf("Matrix cannot be empty\n");
+        return;
+    }
+
+    if (m->rows != m->columns)
+    {
+        printf("Matrix must be square\n");
+        return;
+    }
+
+    if (m->columns == 1 && m->rows == 1)
+    {
+        det = m->elements[0][0] + 0.000000;
+    }
+    else if (m->rows == 2 && m->rows == 2)
+    {
+        det = m->elements[0][0] * m->elements[1][1] - m->elements[0][1] * m->elements[1][0] + +0.000000;
+    }
+    else
+    {
+         for (c = 0; c < m->columns; c++)
+        {
+            matrix_t minor;
+            minor = minorMatrix(m, 0, c);
+            sign = c % 2 == 0 ? 1 : -1;
+ 
+            det += sign * m->elements[0][c] * determinant(&minor) + 0.000000;
+        }
+    }
+    printf("%1.2f:", det);
+    return det;
 }
