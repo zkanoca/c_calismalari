@@ -8,9 +8,9 @@ A initialise matrix A  --> OK
 B copy matrix A to matrix B
 + add matrix A to matrix B, placing the result in matrix C --> OK
 t transpose matrix A --> OK
-∗ multiply matrix A and B, placing the result in matrix C
-m compute a minor of matrix A, placing the result in matrix C
-d compute the determinant of matrix A
+∗ multiply matrix A and B, placing the result in matrix C --> OK
+m compute a minor of matrix A, placing the result in matrix C --> OK
+d compute the determinant of matrix A 
 */
 #include <stdio.h>
 #include <string.h>
@@ -30,6 +30,8 @@ void freeMatrixElements(matrix_t *m);
 void addMatrices(matrix_t ma, matrix_t mb);
 void transposeMatrix(matrix_t *m);
 void copyA2B(matrix_t *ma, matrix_t *mb);
+void multiplyMatrices(matrix_t ma, matrix_t mb, matrix_t *mc);
+matrix_t minorMatrix(matrix_t *m, int row, int column);
 
 int main()
 {
@@ -46,10 +48,6 @@ int main()
     char cmd;
 
     int rows, cols;
-    ma.rows = 0;
-    ma.columns = 0;
-    mb.rows = 0;
-    mb.columns = 0;
 
     do
     {
@@ -86,6 +84,15 @@ int main()
         case 't':
             transposeMatrix(&ma);
             break;
+        case '*':
+            multiplyMatrices(ma, mb, &mc);
+            break;
+        case 'm':
+
+            printf("Remove which row & column? ");
+            scanf("%d %d", &rows, &cols);
+            mc = minorMatrix(&ma, rows, cols);
+            break;
         case 'q':
             freeMatrixElements(&ma);
             freeMatrixElements(&mb);
@@ -102,6 +109,15 @@ int main()
 
 matrix_t newMatrix(int rows, int columns, char zeroOrRead)
 {
+
+    // are row count and the column count not in the allowed range?
+    if (rows < 1 || rows > 10 || columns < 1)
+    {
+        // exit function if not
+        printf("Rows must be 1 to 10, and columns must be at least 1 \n");
+        return;
+    }
+
     int r, c;
     matrix_t matrix;
 
@@ -167,7 +183,6 @@ void freeMatrixElements(matrix_t *m)
 
     for (r = 0; r < m->rows; r++)
     {
-
         if (m->elements[r] != NULL)
         {
             free(m->elements[r]);
@@ -183,9 +198,15 @@ void addMatrices(matrix_t ma, matrix_t mb)
 {
     int r, c;
 
-    if (ma.elements == NULL || mb.elements == NULL)
+    if (ma.elements[0] == NULL && mb.elements[0] == NULL)
     {
         printf("Matrices cannot be empty\n");
+        return;
+    }
+
+    if (mb.elements[0] == NULL)
+    {
+        printf("Matrix B is empty\n");
         return;
     }
 
@@ -263,4 +284,82 @@ void copyA2B(matrix_t *ma, matrix_t *mb)
             mb->elements[r][c] = ma->elements[r][c];
         }
     }
+}
+
+void multiplyMatrices(matrix_t ma, matrix_t mb, matrix_t *mc)
+{
+    int r, c, i;
+    // matrices are null?
+    if (ma.rows == -1 || mb.rows == -1 || ma.columns == -1 || mb.rows == -1)
+    {
+        printf("Matrices cannot be empty\n"); // then exit function
+        return;
+    }
+    // matrix a's column count must be equal to matrix b's row count
+    if (ma.columns != mb.rows)
+    {
+        printf("Matrix dimensions don't agree\n"); // otherwise exit function
+        return;
+    }
+
+    // Start process if there is no problem
+    //  Call newMatrix and fill all the elements with zero in matrix C
+    *mc = newMatrix(ma.rows, mb.columns, '0');
+
+    // multiplication
+    // A(r,0)×B(0,c) + A(r,1)×B(1,c) + A(r,columnsA-1)×B(columnsA-1,c)
+    for (r = 0; r < ma.rows; r++)
+    {
+        for (c = 0; c < mb.columns; c++)
+        {
+            for (i = 0; i < ma.columns; i++)
+            {
+                mc->elements[r][c] += ma.elements[r][i] * mb.elements[i][c];
+            }
+        }
+    }
+}
+
+matrix_t minorMatrix(matrix_t *m, int row, int column)
+{
+    matrix_t minor = {-1, -1, {
+                                  NULL,
+                              }};
+    int r, c, mr, mc;
+
+    // Check if the matrix has at least two rows and columns
+    if (m->rows < 2 || m->columns < 2)
+    {
+        printf("Matrix must have at least two rows & columns\n");
+        return minor; // Return empty matrix
+    }
+
+    // Check if the row and column are within the matrix's dimensions
+    if (row < 0 || row >= m->rows || column < 0 || column >= m->columns)
+    {
+        printf("Row & column must be 0 up to %d & %d, respectively\n", m->rows, m->columns);
+        return minor; // Return empty matrix
+    }
+
+    minor = newMatrix(m->rows - 1, m->columns - 1, '0');
+
+    // Fill the minor matrix
+    for (r = 0, mr = 0; r < m->rows; r++)
+    {
+        if (r == row)
+            continue; // Skip the specified row and jump to next row(r++)
+
+        for (c = 0, mc = 0; c < m->columns; c++)
+        {
+            if (c == column)
+                continue; // Skip the specified column and jump to next col (c++)
+
+            minor.elements[mr][mc] = m->elements[r][c];
+            mc++;
+        }
+
+        mr++;
+    }
+
+    return minor;
 }
