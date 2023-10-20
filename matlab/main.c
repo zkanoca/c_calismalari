@@ -5,7 +5,7 @@ a print matrix A  -->OK
 b print matrix B  -->OK
 c print matrix C  -->OK
 A initialise matrix A  --> OK
-B copy matrix A to matrix B
+B copy matrix A to matrix B --> OK
 + add matrix A to matrix B, placing the result in matrix C --> OK
 t transpose matrix A --> OK
 ∗ multiply matrix A and B, placing the result in matrix C --> OK
