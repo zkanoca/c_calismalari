@@ -1,19 +1,5 @@
-/*
-q quit program -->OK
-0 create zero matrix A  -->OK
-a print matrix A  -->OK
-b print matrix B  -->OK
-c print matrix C  -->OK
-A initialise matrix A  --> OK
-B copy matrix A to matrix B --> OK
-+ add matrix A to matrix B, placing the result in matrix C --> OK
-t transpose matrix A --> OK
-∗ multiply matrix A and B, placing the result in matrix C --> OK
-m compute a minor of matrix A, placing the result in matrix C --> OK
-d compute the determinant of matrix A --> OK
-*/
+
 #include <stdio.h>
-#include <math.h>
 #include <stdlib.h>
 
 #define MAXROWS 10
@@ -76,6 +62,7 @@ int main()
             printMatrix(mc, 'C');
             break;
         case 'B':
+            freeMatrixElements(&mb);
             mb = newMatrix(ma.rows, ma.columns, '0');
             copyA2B(&ma, &mb);
             break;
@@ -117,6 +104,10 @@ int main()
 matrix_t newMatrix(int rows, int columns, char zeroOrRead)
 {
 
+    matrix_t matrix = {-1, -1, {
+                                   NULL,
+                               }};
+
     // are row count and the column count not in the allowed range?
     if (rows < 1 || rows > 10 || columns < 1)
     {
@@ -126,7 +117,6 @@ matrix_t newMatrix(int rows, int columns, char zeroOrRead)
     }
 
     int r, c;
-    matrix_t matrix;
 
     matrix.rows = rows;
     matrix.columns = columns;
@@ -181,24 +171,26 @@ void printMatrix(matrix_t m, char name)
 
 void freeMatrixElements(matrix_t *m)
 {
-    int r, c;
-    // Is the matrix not an empty matris?
-    if (m->rows == -1 && m->columns == -1)
-    {
-        return;
-    }
+    int r;
 
-    for (r = 0; r < m->rows; r++)
+    // Is the matrix not an empty matris?
+    if (m->rows != -1 && m->columns != -1)
     {
-        if (m->elements[r] != NULL)
+        // for each row
+        for (r = 0; r < m->rows; r++)
         {
-            free(m->elements[r]);
-            m->elements[r] = NULL;
+            // if row is not NULL
+            if (m->elements[r] != NULL)
+            {
+                // free the current row
+                free(m->elements[r]);
+            }
         }
+
+        // Reset matrix
+        m->rows = -1;
+        m->columns = -1;
     }
-    // Reset matrix
-    m->rows = -1;
-    m->columns = -1;
 }
 
 void addMatrices(matrix_t ma, matrix_t mb)
@@ -280,7 +272,6 @@ void copyA2B(matrix_t *ma, matrix_t *mb)
     int r, c;
     mb->rows = ma->rows;
     mb->columns = ma->columns;
-    // mb->elements = (float*)malloc(mb->rows * sizeof(float *));
 
     for (r = 0; r < mb->rows; r++)
     {
@@ -371,9 +362,10 @@ matrix_t minorMatrix(matrix_t *m, int row, int column)
     return minor;
 }
 
+
 float determinant(matrix_t *m)
 {
-    int r, c, sign;
+    int c, sign;
     float det = 0;
 
     if (m->rows <= 0 || m->columns <= 0)
@@ -394,17 +386,18 @@ float determinant(matrix_t *m)
     }
     else if (m->rows == 2 && m->rows == 2)
     {
-        det = m->elements[0][0] * m->elements[1][1] - m->elements[0][1] * m->elements[1][0] + +0.000000;
+        det = m->elements[0][0] * m->elements[1][1] - m->elements[0][1] * m->elements[1][0] +0.000000;
     }
     else
     {
-         for (c = 0; c < m->columns; c++)
+        for (c = 0; c < m->columns; c++)
         {
             matrix_t minor;
             minor = minorMatrix(m, 0, c);
             sign = c % 2 == 0 ? 1 : -1;
- 
+
             det += sign * m->elements[0][c] * determinant(&minor) + 0.000000;
+            freeMatrixElements(&minor);
         }
     }
     printf("%1.2f:", det);
