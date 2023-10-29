@@ -317,17 +317,17 @@ void appendWords(char *wordList[MAXWORDS], char *word1, char *word2)
 
     concatenation[lw1 + lw2 + 1] = '\0';
 
-    wordList[index1] = NULL;
     free(wordList[index1]);
-
-    char *oldWord = wordList[index1];
-    wordList[index1] = concatenation;
-
-    if (oldWord)
+     for (i = index1; i < MAXWORDS - 1; i++)
     {
-        free(oldWord);
+        wordList[i] = wordList[i + 1];
+        if (wordList[i] == NULL)
+        {
+            break;
+        }
     }
-
+    
+    free(wordList[index2]);
     for (i = index2; i < MAXWORDS - 1; i++)
     {
         wordList[i] = wordList[i + 1];
@@ -337,8 +337,9 @@ void appendWords(char *wordList[MAXWORDS], char *word1, char *word2)
         }
     }
 
-    wordList[MAXWORDS - 1] = NULL;
-    free(wordList[MAXWORDS - 1]);
+    free(wordList[MAXWORDS - 1]); 
+    
+   insertWord( wordList, concatenation);
 }
 
 void freeWordList(char *wordList[MAXWORDS])
