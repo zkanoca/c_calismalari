@@ -340,7 +340,7 @@ void appendWords(char *wordList[MAXWORDS], char *word1, char *word2)
         }
     }
 
-	wordList[MAXWORDS - 1] = NULL;
+    wordList[MAXWORDS - 1] = NULL;
     free(wordList[MAXWORDS - 1]);
 }
 
@@ -349,10 +349,7 @@ void freeWordList(char *wordList[MAXWORDS])
     int i;
     for (i = 0; i < MAXWORDS; i++)
     {
-        if (wordList[i] != NULL)
-        {
-            free(wordList[i]);
-        }
+            wordList[i] = NULL;    
     }
 }
 
