@@ -147,29 +147,46 @@ void printWordList(char *wordList[MAXWORDS])
     }
 }
 
-void insertWord(char *wordList[MAXWORDS], char *word)
-{
-    int i, j;
-
-    // Search for the word in the list
-    for (i = 0; i < MAXWORDS && wordList[i] != NULL; i++)
-    {
-        if (strcmp(wordList[i], word) == 0)
-        {
-            // Shift words to the right, starting from the first occurrence of the word
-            for (j = MAXWORDS - 2; j >= i; j--)
-            {
-                wordList[j + 1] = wordList[j];
-            }
-
-            // Insert the new word
-            wordList[i] = strdup(word);
-            return;
+void insertWord(char *wordList[MAXWORDS], char *word) {
+    // Check if the list is full
+    int lastSlot = -1, i;
+    for ( i = 0; i < MAXWORDS; i++) {
+        if (wordList[i] == NULL) {
+            lastSlot = i;
+            break;
         }
     }
 
-    // If word was not found in the list, simply insert at the end
-    wordList[i] = strdup(word);
+    if (lastSlot == -1) {
+        printf("List is full\n");
+        return;
+    }
+
+    // Allocate space for the new word
+    char *newWord = malloc(strlen(word) + 1);
+    if (!newWord) {
+        printf("Memory allocation error\n");
+        return;
+    }
+    strcpy(newWord, word);
+
+    // Find the position to insert the word in the sorted list
+    int pos = 0;
+    for ( i = 0; i < lastSlot; i++) {
+        if (strcmp(wordList[i], newWord) > 0) {
+            pos = i;
+            break;
+        }
+        pos = i + 1;
+    }
+
+    // Shift other words down to make space
+    for ( i = lastSlot; i > pos; i--) {
+        wordList[i] = wordList[i - 1];
+    }
+
+    // Insert the new word
+    wordList[pos] = newWord;
 }
 
 void findWord(char **wordList, char *word, int *index)
