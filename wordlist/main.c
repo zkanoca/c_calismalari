@@ -318,18 +318,10 @@ void appendWords(char *wordList[MAXWORDS], char *word1, char *word2)
     concatenation[lw1 + lw2 + 1] = '\0';
 
     free(wordList[index1]);
-    for (i = index1; i < MAXWORDS - 1; i++)
-    {
-        wordList[i] = wordList[i + 1];
-        if (wordList[i] == NULL)
-        {
-            break;
-        }
-    }
+    wordList[index1] = concatenation;
 
-    findWord(wordList, word2, &index2); //get the new index after shift
-    free(wordList[index2]); //empty wordlist's index2 indice.
-    for (i = index2; i < MAXWORDS - 1; i++) 
+    free(wordList[index2]); // empty wordlist's index2 indice.
+    for (i = index2; i < MAXWORDS - 1; i++)
     {
         wordList[i] = wordList[i + 1];
         if (wordList[i] == NULL)
@@ -340,10 +332,11 @@ void appendWords(char *wordList[MAXWORDS], char *word1, char *word2)
 
     free(wordList[MAXWORDS - 1]);
 
-    insertWord(wordList, concatenation);
+    // insertWord(wordList, concatenation);
 
     free(concatenation);
 }
+
 
 void freeWordList(char *wordList[MAXWORDS])
 {
