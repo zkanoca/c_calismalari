@@ -31,7 +31,7 @@ int main()
 {
     // pynq_init();
     // color_leds_init_pwm();
-    display_t display;
+    // display_t display;
     // display_init(&display);
     // displayFillScreen(&display, RGB_BLACK);
 
