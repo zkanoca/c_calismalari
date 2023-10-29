@@ -148,29 +148,24 @@ void printWordList(char *wordList[MAXWORDS])
     }
 }
 
-void insertWord(char *wordList[MAXWORDS], char *word)
-{
+void insertWord(char *wordList[MAXWORDS], char *word) {
     // Check if the list is full
     int lastSlot = -1, i;
-    for (i = 0; i < MAXWORDS; i++)
-    {
-        if (wordList[i] == NULL)
-        {
+    for ( i = 0; i < MAXWORDS; i++) {
+        if (wordList[i] == NULL) {
             lastSlot = i;
             break;
         }
     }
 
-    if (lastSlot == -1)
-    {
+    if (lastSlot == -1) {
         printf("List is full\n");
         return;
     }
 
     // Allocate space for the new word
-    char *newWord = (char*)malloc(strlen(word) + 1);
-    if (!newWord)
-    {
+    char *newWord = malloc(strlen(word) + 1);
+    if (!newWord) {
         printf("Memory allocation error\n");
         return;
     }
@@ -178,10 +173,8 @@ void insertWord(char *wordList[MAXWORDS], char *word)
 
     // Find the position to insert the word in the sorted list
     int pos = 0;
-    for (i = 0; i < lastSlot; i++)
-    {
-        if (strcmp(wordList[i], newWord) > 0)
-        {
+    for ( i = 0; i < lastSlot; i++) {
+        if (strcmp(wordList[i], newWord) > 0) {
             pos = i;
             break;
         }
@@ -189,8 +182,7 @@ void insertWord(char *wordList[MAXWORDS], char *word)
     }
 
     // Shift other words down to make space
-    for (i = lastSlot; i > pos; i--)
-    {
+    for ( i = lastSlot; i > pos; i--) {
         wordList[i] = wordList[i - 1];
     }
 
