@@ -287,7 +287,7 @@ void changeVowels(char *wordList[MAXWORDS])
 
 void appendWords(char *wordList[MAXWORDS], char *word1, char *word2)
 {
-    int index1, index2, i, lw1, lw2;
+    int index1=-1, index2, i, lw1, lw2;
 
     for (i = MAXWORDS - 1; i >= 0; i--) 
     {
@@ -325,13 +325,11 @@ void appendWords(char *wordList[MAXWORDS], char *word1, char *word2)
 
     concatenation[lw1 + lw2 + 1] = '\0';
 
-    free(wordList[index1]);
-    wordList[index1] = NULL;
+//    free(wordList[index1]);
 
     wordList[index1] = concatenation;
 
     free(wordList[index2]); // empty wordlist's index2 indice.
-    wordList[index2] = NULL;
 
     for (i = index2; i < MAXWORDS - 1; i++)
     {
@@ -342,10 +340,9 @@ void appendWords(char *wordList[MAXWORDS], char *word1, char *word2)
         }
     }
 
+	wordList[MAXWORDS - 1] = NULL;
     free(wordList[MAXWORDS - 1]);
 }
-
-
 
 void freeWordList(char *wordList[MAXWORDS])
 {
