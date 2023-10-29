@@ -114,6 +114,7 @@ int main()
     return 0;
 }
 
+
 void printWordList(char *wordList[MAXWORDS])
 {
     int i, j, k, l;
@@ -147,24 +148,29 @@ void printWordList(char *wordList[MAXWORDS])
     }
 }
 
-void insertWord(char *wordList[MAXWORDS], char *word) {
+void insertWord(char *wordList[MAXWORDS], char *word)
+{
     // Check if the list is full
     int lastSlot = -1, i;
-    for ( i = 0; i < MAXWORDS; i++) {
-        if (wordList[i] == NULL) {
+    for (i = 0; i < MAXWORDS; i++)
+    {
+        if (wordList[i] == NULL)
+        {
             lastSlot = i;
             break;
         }
     }
 
-    if (lastSlot == -1) {
+    if (lastSlot == -1)
+    {
         printf("List is full\n");
         return;
     }
 
     // Allocate space for the new word
-    char *newWord = malloc(strlen(word) + 1);
-    if (!newWord) {
+    char *newWord = (char*)malloc(strlen(word) + 1);
+    if (!newWord)
+    {
         printf("Memory allocation error\n");
         return;
     }
@@ -172,8 +178,10 @@ void insertWord(char *wordList[MAXWORDS], char *word) {
 
     // Find the position to insert the word in the sorted list
     int pos = 0;
-    for ( i = 0; i < lastSlot; i++) {
-        if (strcmp(wordList[i], newWord) > 0) {
+    for (i = 0; i < lastSlot; i++)
+    {
+        if (strcmp(wordList[i], newWord) > 0)
+        {
             pos = i;
             break;
         }
@@ -181,7 +189,8 @@ void insertWord(char *wordList[MAXWORDS], char *word) {
     }
 
     // Shift other words down to make space
-    for ( i = lastSlot; i > pos; i--) {
+    for (i = lastSlot; i > pos; i--)
+    {
         wordList[i] = wordList[i - 1];
     }
 
@@ -325,7 +334,7 @@ void appendWords(char *wordList[MAXWORDS], char *word1, char *word2)
 
     concatenation[lw1 + lw2 + 1] = '\0';
 
-//    free(wordList[index1]);
+	//free(wordList[index1]);
 
     wordList[index1] = concatenation;
 
@@ -340,18 +349,11 @@ void appendWords(char *wordList[MAXWORDS], char *word1, char *word2)
         }
     }
 
-    wordList[MAXWORDS - 1] = NULL;
+	wordList[MAXWORDS - 1] = NULL;
     free(wordList[MAXWORDS - 1]);
 }
 
-void freeWordList(char *wordList[MAXWORDS])
-{
-    int i;
-    for (i = 0; i < MAXWORDS; i++)
-    {
-            wordList[i] = NULL;    
-    }
-}
+
 
 void shareWord(char *wordList[MAXWORDS], char *word)
 {
@@ -378,7 +380,8 @@ void shareWord(char *wordList[MAXWORDS], char *word)
         {
             wordList[i + 1] = wordList[i];
         }
-        // Point the new entry to the same memory location as the first occurrence of the word
+        // Point the new entry to the same memory location 
+		//as the first occurrence of the word
         wordList[index] = wordList[index + 1];
     }
 }
@@ -418,4 +421,13 @@ void deleteWord(char *wordList[MAXWORDS], char *word)
         wordList[i] = wordList[i + 1];
     }
     wordList[MAXWORDS - 1] = NULL; // Reset last word to NULL
+}
+
+void freeWordList(char *wordList[MAXWORDS])
+{
+    int i;
+    for (i = 0; i < MAXWORDS; i++)
+    {
+        wordList[i] = NULL;  
+    }
 }
