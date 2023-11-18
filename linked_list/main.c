@@ -74,7 +74,7 @@ node_t *removeFirst(node_t *head)
 {
     if (head == NULL)
     {
-        printf("List is empty!\n");
+        //printf("List is empty!\n");
         return NULL;
     }
     node_t *temp = head;
