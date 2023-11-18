@@ -7,12 +7,13 @@
 // a helper function to print formatted complex number
 void print_complex_number(node_t *complex_number)
 {
+    // print real part
     printf("%.2f", complex_number->re);
 
     // print imaginary part
     if (complex_number->im < 0)
     {
-        // minus sign comes with the number, no need to insert minus symbol
+        // minus sign comes with the number
         printf("%.2fi", complex_number->im);
     }
     else if (complex_number->im > 0)
@@ -37,12 +38,14 @@ void get_complex_number(float *re, float *im)
 // q command
 void quit_program(node_t *head)
 {
+    // freee all list items until head is null
     while (head != NULL)
     {
         node_t *temp = head;
         head = head->next;
         free(temp);
     }
+
     printf("Bye!\n");
     exit(0);
 }
@@ -51,11 +54,17 @@ void quit_program(node_t *head)
 // Function to insert a new node at the head of the list
 node_t *insertHead(node_t *head, float re, float im)
 {
+    // allocate memory for new list item  
     node_t *newNode = (node_t *)malloc(sizeof(node_t));
 
+    //insert new list item to the new list
     newNode->re = re;
     newNode->im = im;
+
+    //associate new node with the list
     newNode->next = head;
+
+    //return new list as [new+newi, ...]
     return newNode;
 }
 
@@ -69,8 +78,13 @@ node_t *removeFirst(node_t *head)
         return NULL;
     }
     node_t *temp = head;
+
+    //update nead start address 
     head = head->next;
+    //free first list item's deleted node address
     free(temp);
+
+    //return new pointer
     return head;
 }
 
@@ -244,6 +258,7 @@ void printListReverse(node_t *head)
     }
     if (head->next != NULL)
     {
+        //recursively call the function until the end of the list
         printListReverse(head->next);
         printf(",");
     }
