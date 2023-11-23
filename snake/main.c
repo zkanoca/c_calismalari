@@ -36,7 +36,7 @@ void insertPos(pos_t **list, int x, int y)
         return;
     }
 
-    // Traverse the list to find the end and insert
+    // Find the end and insert new position
     pos_t *current = *list;
     while (current->next != NULL)
     {
@@ -67,7 +67,7 @@ void printPos(pos_t *list)
     printf("]\n");
 }
 
-void quit_program(pos_t *snake)
+void quitProgram(pos_t *snake)
 {
     printf("Bye!");
     // free all malloc'd memory at exit
@@ -81,7 +81,7 @@ void quit_program(pos_t *snake)
     }
 }
 
-void get_new_position(int *x, int *y)
+void getNewPosition(int *x, int *y)
 {
     printf("Position (x y)? ");
     scanf("%d %d", x, y);
@@ -121,7 +121,7 @@ int main()
         {
             // quit program
         case 'q':
-            quit_program(snake);
+            quitProgram(snake);
             break;
 
         case 's': // Print the positions list
@@ -131,7 +131,7 @@ int main()
         case 'e':
         {
             int x, y;
-            get_new_position(&x, &y);
+            getNewPosition(&x, &y);
 
             insertPos(&snake, x, y);
 
