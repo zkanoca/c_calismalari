@@ -29,12 +29,7 @@ void get_command(char *cmd)
 void insertPos(pos_t **list, int x, int y)
 {
     pos_t *new_pos = (pos_t *)malloc(sizeof(pos_t));
-    if (new_pos == NULL)
-    {
-        printf("Memory allocation failed\n");
-        return;
-    }
-
+     
     new_pos->x = x;
     new_pos->y = y;
     new_pos->next = NULL;
@@ -153,7 +148,7 @@ void printTTL(ttl_t *list)
 
 int main()
 {
-    
+
     char cmd;
     // sanake 
     pos_t *snake = NULL;
