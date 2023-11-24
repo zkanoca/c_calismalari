@@ -10,6 +10,16 @@ typedef struct _pos_t
     struct _pos_t *next;
 } pos_t;
 
+// Define the TTL structure for bonus and killer pop-ups
+typedef struct _ttl_t
+{
+    int x;
+    int y;
+    int startTTL;
+    int ttl;
+    struct _ttl_t *next;
+} ttl_t;
+
 void get_command(char *cmd)
 {
     printf("Command? ");
@@ -89,9 +99,7 @@ void getNewPosition(int *x, int *y)
 
 pos_t removeFirstPos(pos_t **list)
 {
-    pos_t removed_pos = {
-        NULL,
-    }; // fill with NULL initially
+    pos_t removed_pos;
     if (*list == NULL)
     {
         printf("List is empty\n");
@@ -109,10 +117,50 @@ pos_t removeFirstPos(pos_t **list)
     return removed_pos;
 }
 
+// Task 5: look up a position in the list
+pos_t *lookupPos(pos_t *list, int x, int y)
+{
+
+    while (list != NULL)
+    {
+        if (list->x == x && list->y == y)
+        {
+            // Found the position
+            return list;
+        }
+        list = list->next;
+    }
+
+    // Position not found
+    return NULL;
+}
+
+// Task 6: insert a TTL into the list
+void printTTL(ttl_t *list)
+{
+    printf("[");
+    while (list != NULL)
+    {
+        printf("(%d,%d,%d,%d)", list->x, list->y, list->startTTL, list->ttl);
+        list = list->next;
+        if (list != NULL)
+        {
+            printf(",");
+        }
+    }
+    printf("]\n");
+}
+
 int main()
 {
+    
     char cmd;
+    // sanake 
     pos_t *snake = NULL;
+    //x y positions
+    int x, y;
+    // bonus list
+    ttl_t* bonus = NULL; 
 
     do
     {
@@ -130,11 +178,8 @@ int main()
         // Add new position to the end of the positions list
         case 'e':
         {
-            int x, y;
             getNewPosition(&x, &y);
-
             insertPos(&snake, x, y);
-
             break;
         }
         // Remove the first element from the positions list
@@ -145,6 +190,25 @@ int main()
             {
                 printf("Removed (%d,%d)\n", removed_position.x, removed_position.y);
             }
+            break;
+        }
+        // Lookup position (x,y) in the list
+        case 'l':
+        {
+            getNewPosition(&x, &y);
+            pos_t *found = lookupPos(snake, x, y);
+            printf("Position (%d,%d) is ", x, y);
+            if (found == NULL)
+            {
+                printf("not ");
+            }
+            printf("in the list\n");
+            break;
+        }
+            // Print the bonus list
+        case 'b':
+        {
+            printTTL(bonus);
             break;
         }
         // deault unkown command
