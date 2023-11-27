@@ -41,17 +41,31 @@ void insertPos(pos_t **list, int x, int y)
 
     // Find the end and insert new position
     pos_t *current = *list;
-    while (current->next != NULL)
+    while (current != NULL)
     {
         // Check if the position already exists in the list
         if (current->x == x && current->y == y)
         {
-            printf("Position (%d,%d) already exists in the list.\n", x, y);
+            printf("Position (%d,%d) already exists in the list\n", x, y);
+            //free allocated memory for the new position
             free(new_pos);
+            //turn back to main function
             return;
         }
+
         current = current->next;
     }
+
+    //if the new position values are not in the list, start over to insert it
+    //get the list
+    current = *list;
+    //traverse the list to find the end of the list and ...
+    while (current->next != NULL)
+    {
+        //skip to next position element if current->next is not NULL
+        current = current->next;
+    }
+    // ... insert the new position at the end of the list
     current->next = new_pos;
 }
 
