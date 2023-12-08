@@ -13,17 +13,21 @@ typedef struct _page_t
     struct _page_t *next;
 } page_t;
 
-// Task 1: get command and q command
+// Task 1: get command and "q" command
 void getCommand(char *cmd);
 void quit();
-// Task 2: get new url and p command
+// Task 2: get new url and "p" command
 void getNewURL(char *newURL);
 void addPage(page_t **web, char *url);
-// Task 3: print web and w command
+// Task 3: print web and "w" command
 void printWeb(page_t *web);
-// Task 4: find page and f command
+// Task 4: find page and "f" command
 void getTargetURL(char *targetURL);
 page_t *findPage(page_t *web, char *url);
+page_t *printSearchResult(page_t *searchResult, char *targetURL);
+// Task 5:  add a link to a page and "a" command
+void askURLs(char *source, char *destination);
+void addLink(page_t *web, char *source_url, char *dest_url);
 
 int main()
 {
@@ -31,6 +35,9 @@ int main()
     page_t *web = NULL;
     char newURL[MAXLEN];
     char targetURL[MAXLEN];
+    char source[MAXLEN];
+    char destination[MAXLEN];
+    page_t *searchResult;
 
     do
     {
@@ -48,12 +55,19 @@ int main()
         case 'w':
             printWeb(web);
             break;
-        default:
-            printf("Unknown command '%c'\n", cmd);
-            break;
         case 'f':
             getTargetURL(targetURL);
-            findPage(web, targetURL);
+            searchResult = findPage(web, targetURL);
+            printSearchResult(searchResult, targetURL);
+            break;
+        case 'l':
+            askURLs(source, destination);
+            // printf("Source: %s\n", source);
+            // printf("Destination: %s\n", destination);
+            addLink(web, source, destination);
+            break;
+        default:
+            printf("Unknown command '%c'\n", cmd);
             break;
         }
     } while (cmd != 'q');
@@ -153,16 +167,108 @@ void getTargetURL(char *targetURL)
 
 page_t *findPage(page_t *web, char *url)
 {
-    page_t *current = web;
-    while (current != NULL)
+
+    // page_t *current = web;
+    while (web != NULL)
     {
-        if (strcmp(current->url, url) == 0)
+        // if there is a match, return the current page and exit the loop
+        if (strcmp(web->url, url) == 0)
         {
-            printf("URL \"%s\" is on the web\n", url);
-            return current;
+            return web;
         }
-        current = current->next;
+        // if there is no match, move to the next page
+        web = web->next;
     }
-    printf("URL \"%s\" is not on the web\n", url);
+
+    // if url is not found then return NULL
     return NULL;
+}
+
+page_t *printSearchResult(page_t *searchResult, char *targetURL)
+{
+    if (searchResult == NULL)
+    {
+        printf("URL \"%s\" is not on the web\n", targetURL);
+    }
+    else
+    {
+        printf("URL \"%s\" is on the web\n", targetURL);
+    }
+}
+
+void askURLs(char *source, char *destination)
+{
+    // Source & destination URL? no-page twotter.bu
+
+    printf("Source & destination URL? ");
+    scanf("%s %s", source, destination);
+    // printf("Source URL: %s\n", source);
+    // printf("Destination URL: %s\n", destination);
+}
+
+void addLink(page_t *web, char *source_url, char *dest_url)
+{
+    // Check if source and destination URLs exist
+    page_t *sourcePage = findPage(web, source_url);
+    page_t *destPage = findPage(web, dest_url);
+
+    // if source url is not a member of the list then print the error message and return
+    if (sourcePage == NULL)
+    {
+        printf("Source URL \"%s\" is not on the web\n", source_url);
+        return;
+    }
+
+    // if destination url is not a member of the list then print the error message and return
+    if (destPage == NULL)
+    {
+        printf("Destination URL \"%s\" is not on the web\n", dest_url);
+        return;
+    }
+
+    // a page cannot be linked to itself, so check if the source and destination URLs are the same
+    if (sourcePage == destPage)
+    {
+        printf("Source and destination URL cannot be the same\n");
+        return;
+    }
+
+    // if  source and destination urls exist and are not the same, add the link from source to destination
+
+    int index = -1;
+    int i = 0;
+    // Check if the link already exists
+    while (i < MAXLINKS)
+    {
+        if (sourcePage->links[i] == destPage)
+        {
+            printf("\"%s\" is already a destination for \"%s\"\n", dest_url, source_url);
+            return;
+        }
+        i++;
+    }
+
+    // Find the first available NULL position in the links array of the source page
+    i = 0;
+    while (i < MAXLINKS)
+    {
+        if (sourcePage->links[i] == NULL)
+        {
+            index = i;
+            break;
+        }
+        i++;
+    }
+
+    //if index is still -1 which means there is no available NULL position in the links array, 
+    //print the error message and return.
+    if (index == -1)
+    {
+        printf("Maximum number of links reached\n");
+        return;
+    }
+
+    //if everything is fine, add the link from source to destination and print the success message.
+    sourcePage->links[index] = destPage;
+    printf("Link added from \"%s\" to \"%s\"\n", source_url, dest_url);
 }
