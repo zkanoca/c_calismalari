@@ -15,19 +15,20 @@ typedef struct _page_t
 
 // Task 1: get command and "q" command
 void getCommand(char *cmd);
-void quit();
+void quit(page_t *web);
 // Task 2: get new url and "p" command
-void getNewURL(char *newURL);
+void getURL(char *url);
 void addPage(page_t **web, char *url);
 // Task 3: print web and "w" command
 void printWeb(page_t *web);
 // Task 4: find page and "f" command
-void getTargetURL(char *targetURL);
 page_t *findPage(page_t *web, char *url);
 page_t *printSearchResult(page_t *searchResult, char *targetURL);
 // Task 5:  add a link to a page and "a" command
 void askURLs(char *source, char *destination);
 void addLink(page_t *web, char *source_url, char *dest_url);
+// Task 6: remove a page and "P" command
+void removePage(page_t **web, char *url);
 
 int main()
 {
@@ -46,17 +47,17 @@ int main()
         switch (cmd)
         {
         case 'q':
-            quit();
+            quit(web);
             break;
         case 'p':
-            getNewURL(newURL);
+            getURL(newURL);
             addPage(&web, newURL);
             break;
         case 'w':
             printWeb(web);
             break;
         case 'f':
-            getTargetURL(targetURL);
+            getURL(targetURL);
             searchResult = findPage(web, targetURL);
             printSearchResult(searchResult, targetURL);
             break;
@@ -66,6 +67,12 @@ int main()
             // printf("Destination: %s\n", destination);
             addLink(web, source, destination);
             break;
+        case 'P':
+        {
+            getURL(targetURL);
+            removePage(&web, targetURL);
+            break;
+        }
         default:
             printf("Unknown command '%c'\n", cmd);
             break;
@@ -81,16 +88,17 @@ void getCommand(char *cmd)
     scanf(" %c", cmd);
 }
 
-void quit()
+void quit(page_t *web)
 {
     printf("Bye!\n");
+    while (web != NULL)
+    {
+        page_t *temp = web;
+        web = web->next;
+        free(temp->url);
+        free(temp);
+    }
     exit(0);
-}
-
-void getNewURL(char *newURL)
-{
-    printf("Page URL? ");
-    scanf("%s", newURL);
 }
 
 void addPage(page_t **web, char *url)
@@ -99,19 +107,22 @@ void addPage(page_t **web, char *url)
     page_t *current = *web;
     while (current != NULL)
     {
+        // if so, print the error message
         if (strcmp(current->url, url) == 0)
         {
             // if so, print the error message
             printf("URL \"%s\" is already on the web\n", url);
             return;
         }
+        // otherwise, move to the next page
         current = current->next;
     }
 
     // Create a new page
     page_t *newPage = (page_t *)malloc(sizeof(page_t));
-    newPage->url = strdup(url); // Allocate memory for URL and copy the string
-    //
+    // duplicate url string and store it in the new page
+    newPage->url = strdup(url);
+    // initially visited value is -1
     newPage->visited = -1;
 
     // empty all page URLs list
@@ -122,6 +133,7 @@ void addPage(page_t **web, char *url)
     newPage->next = NULL;
 
     // Insert the new page at the correct position in the linked list
+    // in order to have an alphabetically ordered list
     if (*web == NULL || strcmp((*web)->url, url) > 0)
     {
         newPage->next = *web;
@@ -159,15 +171,14 @@ void printWeb(page_t *web)
     }
 }
 
-void getTargetURL(char *targetURL)
+void getURL(char *url)
 {
     printf("Page URL? ");
-    scanf("%s", targetURL);
+    scanf("%s", url);
 }
 
 page_t *findPage(page_t *web, char *url)
 {
-
     // page_t *current = web;
     while (web != NULL)
     {
@@ -260,15 +271,67 @@ void addLink(page_t *web, char *source_url, char *dest_url)
         i++;
     }
 
-    //if index is still -1 which means there is no available NULL position in the links array, 
-    //print the error message and return.
+    // if index is still -1 which means there is no available NULL position in the links array,
+    // print the error message and return.
     if (index == -1)
     {
         printf("Maximum number of links reached\n");
         return;
     }
 
-    //if everything is fine, add the link from source to destination and print the success message.
+    // if everything is fine, add the link from source to destination and print the success message.
     sourcePage->links[index] = destPage;
     printf("Link added from \"%s\" to \"%s\"\n", source_url, dest_url);
+}
+
+// Rest of the functions remain unchanged
+
+void removePage(page_t **web, char *url)
+{
+
+    page_t *current = *web;
+    page_t *prev = NULL;
+    int i;
+
+    while (current != NULL)
+    {
+        if (strcmp(current->url, url) == 0)
+        {
+            int hasLinks = 0;
+            for (i = 0; i < MAXLINKS; ++i)
+            {
+                if (current->links[i] != NULL)
+                {
+                    hasLinks = 1;
+                    break;
+                }
+            }
+
+            if (!hasLinks)
+            {
+                if (prev == NULL)
+                {
+                    *web = current->next;
+                }
+                else
+                {
+                    prev->next = current->next;
+                }
+
+                free(current->url);
+                free(current);
+                printf("Page \"%s\" removed\n", url);
+                return;
+            }
+            else
+            {
+                printf("Since page \"%s\" has links, it cannot be removed\n", url);
+                return;
+            }
+        }
+        prev = current;
+        current = current->next;
+    }
+
+    printf("URL \"%s\" is not on the web\n", url);
 }
