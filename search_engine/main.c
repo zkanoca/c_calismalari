@@ -29,6 +29,9 @@ void askURLs(char *source, char *destination);
 void addLink(page_t *web, char *source_url, char *dest_url);
 // Task 6: remove a page and "P" command
 void removePage(page_t **web, char *url);
+// task 7: remove page fucntion (extended)
+void removePageExtended(page_t **web, char *url);
+void updateLinks(page_t **web, page_t *current);
 
 int main()
 {
@@ -70,7 +73,8 @@ int main()
         case 'P':
         {
             getURL(targetURL);
-            removePage(&web, targetURL);
+            // removePage(&web, targetURL); //Task 6
+            removePageExtended(&web, targetURL); // Task 7
             break;
         }
         default:
@@ -90,7 +94,7 @@ void getCommand(char *cmd)
 
 void quit(page_t *web)
 {
-    printf("Bye!\n");
+
     while (web != NULL)
     {
         page_t *temp = web;
@@ -98,6 +102,7 @@ void quit(page_t *web)
         free(temp->url);
         free(temp);
     }
+    printf("Bye!\n");
     exit(0);
 }
 
@@ -162,6 +167,7 @@ void printWeb(page_t *web)
 
         // Print links
         for (int i = 0; i < MAXLINKS && current->links[i] != NULL; ++i)
+        // for (int i = 0; i < MAXLINKS; ++i)
         {
             printf("\"%s\" ", current->links[i]->url);
         }
@@ -197,14 +203,12 @@ page_t *findPage(page_t *web, char *url)
 
 page_t *printSearchResult(page_t *searchResult, char *targetURL)
 {
-    if (searchResult == NULL)
+    printf("URL \"%s\" is ", targetURL);
+    if (searchResult != NULL)
     {
-        printf("URL \"%s\" is not on the web\n", targetURL);
+        printf("not ");
     }
-    else
-    {
-        printf("URL \"%s\" is on the web\n", targetURL);
-    }
+    printf("on the web\n");
 }
 
 void askURLs(char *source, char *destination)
@@ -281,23 +285,21 @@ void addLink(page_t *web, char *source_url, char *dest_url)
 
     // if everything is fine, add the link from source to destination and print the success message.
     sourcePage->links[index] = destPage;
-    printf("Link added from \"%s\" to \"%s\"\n", source_url, dest_url);
 }
 
-// Rest of the functions remain unchanged
-
+// Task 6: remove a page and "P" command
 void removePage(page_t **web, char *url)
 {
-
     page_t *current = *web;
     page_t *prev = NULL;
     int i;
+    int hasLinks = 0;
 
     while (current != NULL)
     {
         if (strcmp(current->url, url) == 0)
         {
-            int hasLinks = 0;
+            hasLinks = 0;
             for (i = 0; i < MAXLINKS; ++i)
             {
                 if (current->links[i] != NULL)
@@ -320,12 +322,6 @@ void removePage(page_t **web, char *url)
 
                 free(current->url);
                 free(current);
-                printf("Page \"%s\" removed\n", url);
-                return;
-            }
-            else
-            {
-                printf("Since page \"%s\" has links, it cannot be removed\n", url);
                 return;
             }
         }
@@ -334,4 +330,63 @@ void removePage(page_t **web, char *url)
     }
 
     printf("URL \"%s\" is not on the web\n", url);
+}
+
+// Task 7: remove page fucntion (extended)
+void removePageExtended(page_t **web, char *url)
+{
+    page_t *current = *web;
+    page_t *prev = NULL;
+    int i, j;
+
+    while (current != NULL)
+    {
+        if (strcmp(current->url, url) == 0)
+        {
+            if (prev == NULL)
+            {
+                *web = current->next;
+            }
+            else
+            {
+                prev->next = current->next;
+            }
+
+            // Update links array in other pages
+            updateLinks(web, current);
+
+            free(current->url);
+            free(current);
+            return;
+        }
+        prev = current;
+        current = current->next;
+    }
+
+    printf("URL \"%s\" is not on the web\n", url);
+}
+
+// helping function for task 7: remove page fucntion (extended)
+void updateLinks(page_t **web, page_t *current)
+{
+    int i, j;
+    page_t *temp = *web;
+
+    while (temp != NULL)
+    {
+        for (i = 0; i < MAXLINKS; ++i)
+        {
+            if (temp->links[i] == current)
+            {
+                // Shift links to the left onto the NULL slots
+                for (j = i; j < MAXLINKS - 1; ++j)
+                {
+                    temp->links[j] = temp->links[j + 1];
+                }
+                // Set the last link to NULL
+                temp->links[MAXLINKS - 1] = NULL;
+            }
+        }
+        temp = temp->next;
+    }
 }
