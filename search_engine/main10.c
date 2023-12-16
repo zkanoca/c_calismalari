@@ -32,6 +32,7 @@ void removePage(page_t **web, char *url);
 // task 7: remove page fucntion (extended)
 void removePageExtended(page_t **web, char *url);
 void updateLinks(page_t **web, page_t *current);
+/*********************BURADAN******************************/
 // task 8: search keyword and "s" command
 int searchPage(page_t *page, char *keyword);
 page_t *lookUpPage(page_t *web, char *url);
@@ -42,6 +43,8 @@ void getKeyword(char *keyword);
 int lookUpWeb(page_t *page, char *keyword);
 //tast 10: reset visited and "v" command
 void resetVisited(page_t *web, int *r);
+/******************BURAYA********************************/
+
 
 int main()
 {
@@ -53,8 +56,12 @@ int main()
     char destination[MAXLEN];
     page_t *searchResult;
     char keyword[MAXLEN];
+/*********************BURADAN******************************/
+
     page_t *targetPage;
     int r = 0;
+/******************BURAYA********************************/
+
 
     do
     {
@@ -95,6 +102,8 @@ int main()
             removePageExtended(&web, targetURL); // Task 7
             break;
         }
+/*********************BURADAN******************************/
+
         case 's': // task 8
             getKeywordAndWebURL(keyword, targetURL);
             targetPage = lookUpPage(web, targetURL);
@@ -112,6 +121,7 @@ int main()
             resetVisited(web, &r);
             printf("Reset %d pages\n", r);
             break;
+/******************BURAYA********************************/
         default:
             printf("Unknown command '%c'\n", cmd);
             break;
@@ -425,6 +435,7 @@ void updateLinks(page_t **web, page_t *current)
         temp = temp->next;
     }
 }
+/*********************BURADAN******************************/
 
 /*
 TASK 8: Conatins four functions.
@@ -562,3 +573,4 @@ void resetVisited(page_t *web, int *r) {
 
     *r = resetWebCount;
 }
+/******************BURAYA********************************/
