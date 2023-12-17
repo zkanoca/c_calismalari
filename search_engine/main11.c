@@ -40,14 +40,13 @@ void getKeywordAndWebURL(char *keyword, char *targetURL);
 void searchWeb(page_t *web, char *keyword);
 void getKeyword(char *keyword);
 int lookUpWeb(page_t *page, char *keyword);
-/********************BURADAN********************/
+/**********************************Buradan**********************************************/
 // tast 10: reset visited and "v" command
 void resetVisited(page_t *web, int *r);
 // task 11:
 void markVisited(page_t *page);
 void reachable(page_t *page);
-/********************BURAYA********************/
-
+/**********************************Buraya kadar**********************************************/
 int main()
 {
     char cmd;
@@ -57,12 +56,9 @@ int main()
     char source[MAXLEN];
     char destination[MAXLEN];
     page_t *searchResult;
-/********************BURADAN********************/
-
     char keyword[MAXLEN];
     page_t *targetPage;
     int r = 0;
-/********************BURAYA********************/
 
     do
     {
@@ -116,21 +112,20 @@ int main()
             getKeyword(keyword);
             searchWeb(web, keyword);
             break;
-/********************BURADAN********************/
+/**********************************Buradan**********************************************/
         case 'v': //task 10
             resetVisited(web, &r);
             printf("Reset %d pages\n", r);
             break;
         case 'r': //task 11
-        {
+ 
             getURL(targetURL);
+
             resetVisited(web, &r);
             page_t *startPage = findPage(web, targetURL);
             reachable(startPage);
             break;
-        }
-/********************BURAYA********************/
-
+/**********************************Buraya kadar**********************************************/
         default:
             printf("Unknown command '%c'\n", cmd);
             break;
@@ -534,15 +529,10 @@ void searchWeb(page_t *web, char *keyword)
         current = current->next;
     }
 
-/********************BURADAN********************/
-/********************COMMENT YAPILACAK********************/
-
     // if (found == 0)
     // {
     //     printf("No page contains the word \"%s\"\n", keyword);
     // }
-/********************BURAYA********************/
-
 }
 
 void getKeyword(char *keyword)
@@ -581,7 +571,7 @@ int lookUpWeb(page_t *page, char *keyword)
     fclose(file);
     return 0;
 }
-
+/**********************************Buradan**********************************************/
 /*
 TASK 10: Reset Visited Count
 */
@@ -603,39 +593,57 @@ void resetVisited(page_t *web, int *r)
     *r = resetWebCount;
 }
 
-/********************BURADAN********************/
 // /*
 // TASK 11: Reachable Pages
 // */
 void markVisited(page_t *page)
 {
-    if (page != NULL && page->visited != 1)
+    // if (page != NULL && page->visited != 1)
+    // {
+    //     page->visited = 1;
+    //     for (int i = 0; i < MAXLINKS && page->links[i] != NULL; ++i)
+    //     {
+    //         if (page->links[i]->visited != 1)
+    //         {
+    //             markVisited(page->links[i]);
+    //         }
+    //     }
+    // }
+    if(page != NULL)
     {
         page->visited = 1;
-        for (int i = 0; i < MAXLINKS && page->links[i] != NULL; ++i)
-        {
-            if (page->links[i]->visited != 1)
-            {
-                markVisited(page->links[i]);
-            }
-        }
     }
 }
 
 void reachable(page_t *page)
 {
     int r = 0;
-    if (page == NULL)
+    int i;
+    // if (page == NULL)
+    // {
+    //     printf("No such page\n");
+    //     return;
+    // }
+
+    if (page->visited == 1  )
     {
-        printf("No such page\n");
         return;
     }
 
-    markVisited(page);
-
     // Display reachable pages
     printf("%s\n", page->url);
-    resetVisited(page, &r);
-}
+    //mark as visited in order not to list repetitively
+    markVisited(page);
 
-/********************BURAYA********************/
+    //repeat until maxlinks count reached
+    for(i=0; i < MAXLINKS; i++)
+    {
+        //if page link item is not null and page's visited value 0 (never visited before)
+        if(page->links[i] != NULL && page->links[i]->visited == 0)
+        {
+            //call recursively "reachable" function for this link item
+            reachable(page->links[i]);
+        }
+    }
+}
+/**********************************Buraya kadar**********************************************/
