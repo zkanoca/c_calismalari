@@ -104,15 +104,16 @@ void insertChar(char str[], char aChar, int index) {
 
 // Karakter değiştirme fonksiyonu
 void replaceChars(char str[], char sChar[], char rChar) {
-    int i, j;
+    int index, i = 0;
 
-    for (i = 0; str[i] != '\0'; i++) {
-        for (j = 0; sChar[j] != '\0'; j++) {
-            if (str[i] == sChar[j]) {
-                str[i] = rChar;
-                break;
-            }
+    // sChar dizisindeki her bir karakter için arama yap
+    while (sChar[i] != '\0') {
+        // str içinde sChar[i]'yi arayıp her birini değiştirene kadar devam et
+        while ((index = findFirstOccurrence(str, sChar[i])) != -1) {
+            // Karakter bulunduysa, rChar ile değiştir
+            str[index] = rChar;
         }
+        i++;
     }
 }
 
