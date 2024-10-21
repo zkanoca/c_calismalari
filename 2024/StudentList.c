@@ -114,7 +114,7 @@ int main() {
 
     char command;
     while (1) {
-        printf("Command (a: add, p: print, f: find, r: remove, sn: sort by name, ss: sort by surname, si: sort by ID, q: quit): ");
+        printf("Command: ");
         scanf(" %c", &command);
 
         switch (command) {
@@ -138,13 +138,13 @@ int main() {
                 removeStudentByID(students, &count, studentID);
                 break;
             }
-            case 'sn': // İsimlerine göre sıralama
+            case 'n': // İsimlerine göre sıralama
                 sortStudentsByName(students, count);
                 break;
-            case 'ss': // Soyisimlerine göre sıralama
+            case 's': // Soyisimlerine göre sıralama
                 sortStudentsBySurname(students, count);
                 break;
-            case 'si': // Numaralarına göre sıralama
+            case 'i': // Numaralarına göre sıralama
                 sortStudentsByID(students, count);
                 break;
             case 'q':
