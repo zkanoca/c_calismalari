@@ -84,7 +84,6 @@ void removeWord(char *dict[], char *word) {
     if (index != -1) {
         free(dict[index]);  // Bellekte ayrılan yeri serbest bırak
         dict[index] = NULL;  // İlgili dizin boş hale getir
-        printf("Word '%s' removed from dictionary.\n", word);
     } else {
         printf("Word not found in dictionary.\n");
     }
